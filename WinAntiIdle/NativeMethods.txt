@@ -1,0 +1,4 @@
+GetMessageExtraInfo
+GetLastInputInfo
+GetTickCount
+SendInput
