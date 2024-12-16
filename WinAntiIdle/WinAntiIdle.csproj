@@ -5,6 +5,15 @@
         <TargetFramework>net9.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <Version>0.0.1</Version>
+        <Copyright>Ilia Burakov</Copyright>
+        <Authors>Ilia Burakov</Authors>
+        <PackageTags>windows;winapi;pinvoke;win32;windows-api;win64;input-simulation</PackageTags>
+        <RepositoryUrl>https://github.com/magicxor/WinAntiIdle.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageLicenseExpression>Unlicense</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>
