@@ -51,7 +51,7 @@ jobs:
       - name: Build and package
         working-directory: ./WinAntiIdle
         run: |
-          dotnet publish -c release -r win-x64 --framework net9.0-windows --self-contained -p:PublishTrimmed=True -p:TrimMode=Full -p:PublishSingleFile=true
+          dotnet publish -c release -r win-x64 --framework net9.0-windows --self-contained -p:PublishTrimmed=True -p:TrimMode=Link -p:PublishSingleFile=true
           7z a WinAntiIdle_win-x64_net9.0-windows.zip ./bin/release/net9.0-windows/win-x64/publish/*
 
       - name: Publish
