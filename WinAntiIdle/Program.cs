@@ -9,17 +9,18 @@ public class Program
     private static readonly TimeSpan MaxIdleTime = TimeSpan.FromMinutes(1);
     private static readonly TimeSpan CheckPeriod = TimeSpan.FromSeconds(5);
     private static readonly TimeProvider TimeProvider = TimeProvider.System;
-    private static readonly INPUT[] Inputs = GetInputs();
+    private const VIRTUAL_KEY Key = VIRTUAL_KEY.VK__none_;
+    private static readonly INPUT[] Inputs = GetInputs(Key);
     private static readonly int SizeOfInput = Marshal.SizeOf<INPUT>();
     private static readonly uint SizeOfLastInputInfo = (uint)Marshal.SizeOf<LASTINPUTINFO>();
 
-    private static INPUT[] GetInputs()
+    private static INPUT[] GetInputs(VIRTUAL_KEY key)
     {
         var input1 = new INPUT
         {
             type = INPUT_TYPE.INPUT_KEYBOARD,
         };
-        input1.Anonymous.ki.wVk = VIRTUAL_KEY.VK_GAMEPAD_LEFT_THUMBSTICK_LEFT;
+        input1.Anonymous.ki.wVk = key;
         input1.Anonymous.ki.time = 0;
         input1.Anonymous.ki.dwExtraInfo = (nuint)(nint)PInvoke.GetMessageExtraInfo();
 
@@ -28,7 +29,7 @@ public class Program
             type = INPUT_TYPE.INPUT_KEYBOARD,
         };
         input2.Anonymous.ki.dwFlags = KEYBD_EVENT_FLAGS.KEYEVENTF_KEYUP;
-        input2.Anonymous.ki.wVk = VIRTUAL_KEY.VK_GAMEPAD_LEFT_THUMBSTICK_LEFT;
+        input2.Anonymous.ki.wVk = key;
         input2.Anonymous.ki.time = 0;
         input2.Anonymous.ki.dwExtraInfo = (nuint)(nint)PInvoke.GetMessageExtraInfo();
 
@@ -61,7 +62,7 @@ public class Program
                 var idleTime = TimeSpan.FromMilliseconds(tickCountSinceBoot - lastInputTickCountSinceBoot);
                 if (idleTime > MaxIdleTime)
                 {
-                    Console.WriteLine($"Idle time is {idleTime}, sending input");
+                    Console.WriteLine($"Idle time is {(int)idleTime.TotalSeconds}s, sending input: {Key}");
 
                     var insertedEventsCount = PInvoke.SendInput(Inputs.AsSpan(), SizeOfInput);
 
@@ -71,7 +72,7 @@ public class Program
                 }
                 else
                 {
-                    Console.WriteLine($"Idle time is {idleTime}, not sending input");
+                    Console.WriteLine($"Idle time is {(int)idleTime.TotalSeconds}s, waiting...");
                 }
             }
             else
