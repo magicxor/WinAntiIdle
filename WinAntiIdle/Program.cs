@@ -4,10 +4,10 @@ using Windows.Win32.UI.Input.KeyboardAndMouse;
 
 namespace WinAntiIdle;
 
-public class Program
+internal static class Program
 {
-    private static readonly TimeSpan MaxIdleTime = TimeSpan.FromMinutes(1);
-    private static readonly TimeSpan CheckPeriod = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan MaxIdleTime = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan CheckPeriod = TimeSpan.FromSeconds(2);
     private static readonly TimeProvider TimeProvider = TimeProvider.System;
     private const VIRTUAL_KEY Key = VIRTUAL_KEY.VK__none_;
     private static readonly INPUT[] Inputs = GetInputs(Key);
@@ -38,14 +38,14 @@ public class Program
 
     public static async Task Main(string[] args)
     {
-        var cancelTokenSource = new CancellationTokenSource();
+        using var cancelTokenSource = new CancellationTokenSource();
         Console.CancelKeyPress += (_, consoleCancelEventArgs) =>
         {
             cancelTokenSource.Cancel();
             consoleCancelEventArgs.Cancel = true;
         };
 
-        var timer = new PeriodicTimer(CheckPeriod, TimeProvider);
+        using var timer = new PeriodicTimer(CheckPeriod, TimeProvider);
 
         while (!cancelTokenSource.Token.IsCancellationRequested
                && await timer.WaitForNextTickAsync(cancelTokenSource.Token))
